@@ -1,31 +1,3 @@
-const fetchData = async (searchTerm) => {
-    const response = await axios.get('http://www.omdbapi.com/', {
-        params: {
-            apikey: 'e375bd90',
-            s: searchTerm 
-        }
-    });
-
-    if (response.data.Error) {
-        return [];
-    }
-
-    return response.data.Search
-};
-
-
-const debounce = (func, delay = 1000) => {
-    let timeoutId;
-    return (...args) => {
-        if(timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            func.apply(null, args);
-        }, delay)
-    }
-}
-
 createAutoComplete({
     root: document.querySelector('.autocomplete'),
     renderOption(movie) {
@@ -40,6 +12,19 @@ createAutoComplete({
     },
     inputValue(movie) {
         return movie.Title;
+    },
+    async fetchData(searchTerm) {
+        const response = await axios.get('http://www.omdbapi.com/', {
+            params: {
+                apikey: 'e375bd90',
+                s: searchTerm
+            }
+        })
+
+        if (response.data.Error) {
+            return [];
+        }
+        return response.data.Search;
     }
 })
 
